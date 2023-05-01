@@ -1,0 +1,22 @@
+{
+  "name": "fancypanda-slackbot",
+  "version": "0.0.1",
+  "description": "slack app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blineberry/fancypanda-slackbot.git"
+  },
+  "author": "Brent Lineberry",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blineberry/fancypanda-slackbot/issues"
+  },
+  "homepage": "https://github.com/blineberry/fancypanda-slackbot#readme",
+  "dependencies": {
+    "@slack/bolt": "^3.13.1"
+  }
+}
