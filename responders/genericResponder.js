@@ -22,3 +22,7 @@ const genericResponses = [
 const getResponse = () => {
     return genericResponses[Math.floor(Math.random() * genericResponses.length)];
 };
+
+export default {
+    getResponse
+};
