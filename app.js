@@ -11,7 +11,7 @@ const app = new App({
 //    console.log('message listener done');
 //});
 
-app.message([directMention()], async ({ message, context, say }) => {  
+app.message(directMention(), async ({ message, context, say }) => {  
     try {
         await say("```" + JSON.stringify(message) + "```");
         await say("```" + JSON.stringify(context) + "```");

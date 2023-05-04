@@ -1,4 +1,4 @@
-async function loggerListener({ payload, client, context, next }) {
+export async function loggerListener({ payload, client, context, next }) {
     try {
         console.log({
             payload,
