@@ -22,7 +22,13 @@ const app = new App({
 //});
 
 app.event('app_mention', async({ say }) => {
-    say(genericResponder.getResponse());
+    console.log('app_mention');
+    try {
+        await say(genericResponder.getResponse());
+    }
+    catch(e) {
+        console.log(e);
+    }
 });
 
 
