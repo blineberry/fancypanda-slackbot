@@ -7,11 +7,18 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message([loggerListener]);
+app.message([loggerListener], async () => {
+    console.log('message listener done');
+});
 
-app.message([directMention], 'debug', async ({ message, context, say }) => {    
-    await say("```" + JSON.stringify(message) + "```");
-    await say("```" + JSON.stringify(context) + "```");
+app.message([directMention], async ({ message, context, say }) => {  
+    try {
+        await say("```" + JSON.stringify(message) + "```");
+        await say("```" + JSON.stringify(context) + "```");
+    }  
+    catch (e) {
+        console.log({e});
+    }
 });
 
 
