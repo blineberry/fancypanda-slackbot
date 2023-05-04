@@ -7,9 +7,9 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message([loggerListener], async () => {
-    console.log('message listener done');
-});
+//app.message([loggerListener], async () => {
+//    console.log('message listener done');
+//});
 
 app.message([directMention], async ({ message, context, say }) => {  
     try {
