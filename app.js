@@ -1,4 +1,5 @@
 const { App, directMention } = require('@slack/bolt');
+const loggerListener = require('./listeners/loggerListener');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -6,7 +7,9 @@ const app = new App({
     signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message([directMention, 'debug'], async ({ message, context, say }) => {    
+app.message([loggerListener]);
+
+app.message([directMention], 'debug', async ({ message, context, say }) => {    
     await say("```" + JSON.stringify(message) + "```");
     await say("```" + JSON.stringify(context) + "```");
 });
