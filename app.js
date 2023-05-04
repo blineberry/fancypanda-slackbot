@@ -1,5 +1,5 @@
 const { App, directMention } = require('@slack/bolt');
-const loggerListener = require('./listeners/loggerListener');
+const genericResponder = require('./responders/genericResponder');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -11,23 +11,27 @@ const app = new App({
 //    console.log('message listener done');
 //});
 
-app.message(directMention(), async ({ message, context, say }) => {  
-    try {
-        await say("```" + JSON.stringify(message) + "```");
-        await say("```" + JSON.stringify(context) + "```");
-    }  
-    catch (e) {
-        console.log({e});
-    }
+//app.message(directMention(), async ({ message, context, say }) => {  
+//    try {
+//        await say("```" + JSON.stringify(message) + "```");
+//        await say("```" + JSON.stringify(context) + "```");
+//    }  
+//    catch (e) {
+//        console.log({e});
+//    }
+//});
+
+app.event('app_mention', async({ say }) => {
+    say(genericResponder.getResponse());
 });
 
 
 // Listens to incoming messages that contain "hello"
-app.message('hello', async ({ message, say }) => {
-    // say() sends a message to the channel where the event was triggered
-    await say("```" + JSON.stringify(message) + "```");
-    //await say(`Hey there <@${message.user}>!`);
-});
+//app.message('hello', async ({ message, say }) => {
+//    // say() sends a message to the channel where the event was triggered
+//    await say("```" + JSON.stringify(message) + "```");
+//    //await say(`Hey there <@${message.user}>!`);
+//});
 
 (async () => {
     // Start your app
