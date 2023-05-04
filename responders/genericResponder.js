@@ -23,6 +23,6 @@ const getResponse = () => {
     return genericResponses[Math.floor(Math.random() * genericResponses.length)];
 };
 
-export default {
+module.exports = {
     getResponse
 };
