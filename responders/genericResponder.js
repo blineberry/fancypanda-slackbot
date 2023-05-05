@@ -1,7 +1,7 @@
 const genericResponses = [
     'Blimey.',
     'I say!',
-    'ello!',
+    '\'ello!',
     'Ta!',
     'Right ho!',
     'Quite quite!',
@@ -17,6 +17,9 @@ const genericResponses = [
     'Tally-ho!',
     'Poppycock!',
     'How \'bout a cuppa? :tea:',
+    'A good day to you, sir.',
+    'Absolutely spiffing, old chap.',
+    'Good show, lads'
 ];
 
 const getResponse = () => {

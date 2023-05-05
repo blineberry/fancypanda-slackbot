@@ -1,10 +1,15 @@
-const { App, directMention } = require('@slack/bolt');
+const { App, directMention, subtype } = require('@slack/bolt');
 const genericResponder = require('./responders/genericResponder');
+const fpAsMention = require('./listenerMiddleware/fpAsMention');
+const isMention = require('./listenerMiddleware/isMention');
+const isDirectMention = require('./listenerMiddleware/isDirectMention');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    //socketMode: true, // add this
+    //appToken: process.env.SLACK_APP_TOKEN // add this
 });
 
 //app.message([loggerListener], async () => {
@@ -21,15 +26,45 @@ const app = new App({
 //    }
 //});
 
+// Incoming logger
+app.message(async({payload, context}) => {
+    console.log({
+        payload,
+        context
+    });
+});
+
+// Generic Responder
+app.message(fpAsMention, isMention, isDirectMention, async({ context, message, say }) => {
+    console.log('mention responder');
+    console.log({context, message});
+
+    // Only respond if mentioned
+    if (!context.isMention) {
+        return;
+    }
+
+    try {
+        let response = genericResponder.getResponse();
+
+        if (context.isDirectMention) {
+            response = `<@${message.user}> ${response}`;
+        }
+
+        await say(response);
+    } catch(e) {
+        console.log(e);
+    }
+});
+/*
 app.event('app_mention', async({ say }) => {
-    console.log('app_mention');
     try {
         await say(genericResponder.getResponse());
     }
     catch(e) {
         console.log(e);
     }
-});
+});*/
 
 
 // Listens to incoming messages that contain "hello"
