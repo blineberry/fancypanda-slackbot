@@ -4,16 +4,17 @@ const fpAsMention = require('./listenerMiddleware/fpAsMention');
 const isMention = require('./listenerMiddleware/isMention');
 const isDirectMention = require('./listenerMiddleware/isDirectMention');
 const HandlerStack = require('./handlers/handlerStack');
-const DirectMentionHandler = require('./handlers/directMentionHandler');
+const DirectResponseHandler = require('./handlers/directResponseHandler');
 const ProveYouAreNotHumanHandler = require('./handlers/proveYouAreNotHumanHandler');
 const GenericHandler = require('./handlers/genericHandler');
+const TeaCoffeeHandler = require('./handlers/teaCoffeeHandler');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
     signingSecret: process.env.SLACK_SIGNING_SECRET,
-    //socketMode: true, // add this
-    //appToken: process.env.SLACK_APP_TOKEN // add this
+    socketMode: true, // add this
+    appToken: process.env.SLACK_APP_TOKEN // add this
 });
 
 // Incoming logger
@@ -30,8 +31,9 @@ app.message(fpAsMention, isMention, isDirectMention, async({ context, payload, s
 
     try {
         messageHandlerStack = new HandlerStack();
-        messageHandlerStack.add(new DirectMentionHandler());
+        messageHandlerStack.add(new DirectResponseHandler());
         messageHandlerStack.add(new ProveYouAreNotHumanHandler());
+        messageHandlerStack.add(new TeaCoffeeHandler());
         messageHandlerStack.add(new GenericHandler());
 
         let response = await messageHandlerStack.start({context, payload});

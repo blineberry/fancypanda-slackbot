@@ -1,10 +1,10 @@
 const DelegatingHandler = require('./delegatingHandler');
 
-module.exports = class DirectMentionHandler extends DelegatingHandler {
+module.exports = class DirectResponseHandler extends DelegatingHandler {
     async send(request) {
         let response = await super.send(request);
 
-        if (!request.context.isDirectMention) {
+        if (!request.context.isDirectMention && !request.context.shouldRespondDirectly) {
             return response;
         }
 
