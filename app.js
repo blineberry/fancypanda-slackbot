@@ -3,6 +3,10 @@ const genericResponder = require('./responders/genericResponder');
 const fpAsMention = require('./listenerMiddleware/fpAsMention');
 const isMention = require('./listenerMiddleware/isMention');
 const isDirectMention = require('./listenerMiddleware/isDirectMention');
+const HandlerStack = require('./handlers/handlerStack');
+const DirectMentionHandler = require('./handlers/directMentionHandler');
+const ProveYouAreNotHumanHandler = require('./handlers/proveYouAreNotHumanHandler');
+const GenericHandler = require('./handlers/genericHandler');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -12,20 +16,6 @@ const app = new App({
     //appToken: process.env.SLACK_APP_TOKEN // add this
 });
 
-//app.message([loggerListener], async () => {
-//    console.log('message listener done');
-//});
-
-//app.message(directMention(), async ({ message, context, say }) => {  
-//    try {
-//        await say("```" + JSON.stringify(message) + "```");
-//        await say("```" + JSON.stringify(context) + "```");
-//    }  
-//    catch (e) {
-//        console.log({e});
-//    }
-//});
-
 // Incoming logger
 app.message(async({payload, context}) => {
     console.log({
@@ -34,45 +24,25 @@ app.message(async({payload, context}) => {
     });
 });
 
-// Generic Responder
-app.message(fpAsMention, isMention, isDirectMention, async({ context, message, say }) => {
-    console.log('mention responder');
-    console.log({context, message});
-
-    // Only respond if mentioned
-    if (!context.isMention) {
-        return;
-    }
+// Message Handler
+app.message(fpAsMention, isMention, isDirectMention, async({ context, payload, say }) => {
+    console.log('message handler');
 
     try {
-        let response = genericResponder.getResponse();
+        messageHandlerStack = new HandlerStack();
+        messageHandlerStack.add(new DirectMentionHandler());
+        messageHandlerStack.add(new ProveYouAreNotHumanHandler());
+        messageHandlerStack.add(new GenericHandler());
 
-        if (context.isDirectMention) {
-            response = `<@${message.user}> ${response}`;
-        }
+        let response = await messageHandlerStack.start({context, payload});
 
-        await say(response);
+        if (!!response.say) {
+            return await say(response.say);
+        }       
     } catch(e) {
         console.log(e);
     }
 });
-/*
-app.event('app_mention', async({ say }) => {
-    try {
-        await say(genericResponder.getResponse());
-    }
-    catch(e) {
-        console.log(e);
-    }
-});*/
-
-
-// Listens to incoming messages that contain "hello"
-//app.message('hello', async ({ message, say }) => {
-//    // say() sends a message to the channel where the event was triggered
-//    await say("```" + JSON.stringify(message) + "```");
-//    //await say(`Hey there <@${message.user}>!`);
-//});
 
 (async () => {
     // Start your app
