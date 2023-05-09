@@ -1,5 +1,4 @@
 const { App, directMention, subtype } = require('@slack/bolt');
-const genericResponder = require('./responders/genericResponder');
 const fpAsMention = require('./listenerMiddleware/fpAsMention');
 const isMention = require('./listenerMiddleware/isMention');
 const isDirectMention = require('./listenerMiddleware/isDirectMention');
@@ -8,6 +7,7 @@ const DirectResponseHandler = require('./handlers/directResponseHandler');
 const ProveYouAreNotHumanHandler = require('./handlers/proveYouAreNotHumanHandler');
 const GenericHandler = require('./handlers/genericHandler');
 const TeaCoffeeHandler = require('./handlers/teaCoffeeHandler');
+const PandaEmojiHandler = require('./handlers/pandaEmojiHandler');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -27,13 +27,12 @@ app.message(async({payload, context}) => {
 
 // Message Handler
 app.message(fpAsMention, isMention, isDirectMention, async({ context, payload, say }) => {
-    console.log('message handler');
-
     try {
         messageHandlerStack = new HandlerStack();
         messageHandlerStack.add(new DirectResponseHandler());
         messageHandlerStack.add(new ProveYouAreNotHumanHandler());
         messageHandlerStack.add(new TeaCoffeeHandler());
+        messageHandlerStack.add(new PandaEmojiHandler());
         messageHandlerStack.add(new GenericHandler());
 
         let response = await messageHandlerStack.start({context, payload});
