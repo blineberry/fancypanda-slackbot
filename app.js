@@ -8,6 +8,7 @@ const ProveYouAreNotHumanHandler = require('./handlers/proveYouAreNotHumanHandle
 const GenericHandler = require('./handlers/genericHandler');
 const TeaCoffeeHandler = require('./handlers/teaCoffeeHandler');
 const PandaEmojiHandler = require('./handlers/pandaEmojiHandler');
+const AlcoholHandler = require('./handlers/alcoholHandler');
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -32,6 +33,7 @@ app.message(fpAsMention, isMention, isDirectMention, async({ context, payload, s
         messageHandlerStack.add(new DirectResponseHandler());
         messageHandlerStack.add(new ProveYouAreNotHumanHandler());
         messageHandlerStack.add(new TeaCoffeeHandler());
+        messageHandlerStack.add(new AlcoholHandler());
         messageHandlerStack.add(new PandaEmojiHandler());
         messageHandlerStack.add(new GenericHandler());
 
